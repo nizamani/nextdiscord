@@ -2,7 +2,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
-import { channel } from 'diagnostics_channel';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
