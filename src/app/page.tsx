@@ -1,7 +1,7 @@
 'use client';
 import { useSelector } from "react-redux";
 import { RootState } from "../app/redux/store";
-import Sidebar from '../app/components/sidebar';
+import Sidebar from '../app/components/Sidebar';
 import ChatArea from "./components/ChatArea";
 
 const ChatApp = () => {

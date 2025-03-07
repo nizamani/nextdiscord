@@ -2,6 +2,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
+import { channel } from 'diagnostics_channel';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
@@ -15,6 +16,52 @@ export default function Sidebar() {
 
     // user slice to display user's profile picture and their full name
     const user = useSelector((state: RootState) => state.user);
+
+    // this will come inside useEffect from backend
+    const channels = [
+        {
+            key: 1,
+            name: 'General',
+            icon: '🏠',
+            isFavorite: false,
+        },
+        {
+            key: 2,
+            name: 'Gaming',
+            icon: '🎲',
+            isFavorite: false,
+        },
+        {
+            key: 3,
+            name: 'Coding',
+            icon: '#',
+            isFavorite: false,
+        },
+        {
+            key: 4,
+            name: 'Movies',
+            icon: '#',
+            isFavorite: false,
+        },
+        {
+            key: 5,
+            name: 'Music',
+            icon: '🎸',
+            isFavorite: false,
+        },
+        {
+            key: 6,
+            name: 'Tech Talk',
+            icon: '🧑🏻‍💻',
+            isFavorite: true,
+        },
+        {
+            key: 7,
+            name: 'Sports',
+            icon: '🥎',
+            isFavorite: true,
+        },
+    ];
     
   return (
     <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"}
@@ -41,12 +88,15 @@ export default function Sidebar() {
         {/* Favorite Channels */}
         <h2 className="text-lg font-bold">Favorite Channels</h2>
         <ul className="mt-2">
-            <li className={`flex items-center p-2 ${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} rounded cursor-pointer`}>
-            🧑🏻‍💻 <button className="ml-1">Tech Talk</button>
-            </li>
-            <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} flex items-center p-2 rounded cursor-pointer`}>
-            🥎 <button className="ml-1">Sports</button>
-            </li>
+            {channels.map((channel) => (
+                // only favorite channels will be shown here
+                (channel.isFavorite) ?
+                <li key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                {channel.icon} {channel.name}
+                </li>
+                // non-favorite channels won't be shown
+                : ''
+            ))}
         </ul>
 
         {/* Inbox */}
@@ -61,21 +111,14 @@ export default function Sidebar() {
             Channels
             </h2>
             <ul className="mt-2">
-                <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                🏠 General <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
-                </li>
-                <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                🎲 Gaming <span id="unread-gaming" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">5</span>
-                </li>
-                <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                    # Coding <span id="unread-coding" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">8</span>
-                </li>
-                <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                    # Movies <span id="unread-movies" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full hidden">1</span>
-                </li>
-                <li className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                🎸 Music <span id="unread-music" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full hidden">2</span>
-                </li>
+                {channels.map((channel) => (
+                    (!channel.isFavorite) ?
+                    <li key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                    {channel.icon} {channel.name} <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
+                    </li>
+                    // favorite channel won't be shown here
+                    : ''
+                ))}
             </ul>
         </div>
     </aside>
