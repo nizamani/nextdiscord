@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/features/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
+import Image from 'next/image';
 
 const ChatArea = () => {
   const dispatch = useDispatch();
@@ -38,14 +39,14 @@ const ChatArea = () => {
       {/* Chat Messages */}
       <div className={`flex flex-col space-y-4 ${fontSize}`}>
           <div className={`flex items-start gap-3 p-3 rounded-lg ${darkMode ? "bg-gray-600 text-white" : "bg-indigo-300"}`}>
-              <img src="law.jpg" className="w-10 h-10 rounded-full" alt="Profile" />
+              <Image src="law.jpg" className="w-10 h-10 rounded-full" alt="Profile" />
               <div>
                   <p className="font-bold">User123 <span className="text-sm chat-time">10:30 AM</span></p>
                   <p className="chat-text">Hello everyone!</p>
               </div>
           </div>
           <div className={`flex items-start gap-3 p-3 rounded-lg ${darkMode ? "bg-gray-900 text-white" : "bg-indigo-400"}`}>
-              <img src="law.jpg" className="w-10 h-10 rounded-full" alt="Profile" />
+              <Image src="law.jpg" className="w-10 h-10 rounded-full" alt="Profile" />
               <div>
                   <p className="font-bold">User456 <span className="text-sm chat-time">10:45 AM</span></p>
                   <p className="chat-text">What's up?</p>

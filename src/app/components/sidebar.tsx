@@ -2,6 +2,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
+import Image from 'next/image';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
@@ -73,7 +74,7 @@ export default function Sidebar() {
         {/* Settings */}
         <h2 className="text-lg font-bold">Settings</h2>
         <div className="relative flex items-center mt-2 cursor-pointer" onClick={() => dispatch(toggleSettingsMenu())}>
-            <img src={user.profilePicture} alt="User Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600" />
+            <Image src={user.profilePicture} alt="User Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600" />
             <div className="select-none ml-3 mt-3">{user.name}</div>
             {isSettingsMenuOpen ? (
                 <div className="absolute left-0 top-10 mt-2 w-48 bg-white shadow-lg rounded-lg">
