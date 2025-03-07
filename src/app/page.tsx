@@ -1,8 +1,8 @@
 'use client';
 import { useSelector } from "react-redux";
-import { RootState } from "../app/redux/store";
-import Sidebar from './components/Sidebar';
-import ChatArea from './components/ChatArea';
+import { RootState } from '../app/redux/store';
+import Sidebar from '../app/components/Sidebar';
+import ChatArea from '../app/components/ChatArea';
 
 const ChatApp = () => {
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
