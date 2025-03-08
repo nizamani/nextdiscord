@@ -75,7 +75,7 @@ export default function Sidebar() {
         {/* Settings */}
         <h2 className="text-lg font-bold">Settings</h2>
         <div className="relative flex items-center mt-2 cursor-pointer" onClick={() => dispatch(toggleSettingsMenu())}>
-            {/* <Image fill src={user.profilePicture} alt="User Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600" /> */}
+            <Image width={40} height={40} src={user.profilePicture} alt="User Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600 object-cover" />
             <div className="select-none ml-3 mt-3">{user.name}</div>
             {isSettingsMenuOpen ? (
                 <div className="absolute left-0 top-10 mt-2 w-48 bg-white shadow-lg rounded-lg">
@@ -92,7 +92,7 @@ export default function Sidebar() {
             {channels.map((channel) => (
                 // only favorite channels will be shown here
                 (channel.isFavorite) ?
-                <li key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                <li onClick={() => dispatch(setCurrentChannel(channel.key))} key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
                 {channel.icon} {channel.name}
                 </li>
                 // non-favorite channels won't be shown

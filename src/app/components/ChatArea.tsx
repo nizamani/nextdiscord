@@ -5,27 +5,6 @@ import { toggleSidebar } from '../redux/features/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
 import Image from 'next/image';
 
-// channel messages
-const channelMessages = [
-  {
-    channelId: 1,
-    messages: [
-      {
-        id: 1,
-        userId: 1,
-        text: 'Hello everyone!',
-        time: '10:30 AM',
-      },
-      {
-        id: 1,
-        userId: 2,
-        text: 'Fine, thanks for asking',
-        time: '10:45 AM',
-      },
-    ],
-  },
-];
-
 const discordChannels = [
   {
     channelId: 1,
@@ -72,7 +51,78 @@ const discordChannels = [
         text: "Yes, I can help!",
         time: "02:32 PM",
         userId: 1,
-        channelId: 3,
+      },
+    ],
+  },
+  {
+    channelId: 4,
+    channelName: "Movies",
+    messages: [
+      {
+        messageId: 5,
+        text: "Does anyone know good movies?",
+        time: "02:30 PM",
+        userId: 2,
+      },
+      {
+        messageId: 6,
+        text: "Yes, Bataman Dark Knight!",
+        time: "02:32 PM",
+        userId: 1,
+      },
+    ],
+  },
+  {
+    channelId: 5,
+    channelName: "Music",
+    messages: [
+      {
+        messageId: 5,
+        text: "Your favorite song?",
+        time: "02:30 PM",
+        userId: 1,
+      },
+      {
+        messageId: 6,
+        text: "I don't have any!",
+        time: "02:32 PM",
+        userId: 2,
+      },
+    ],
+  },
+  {
+    channelId: 6,
+    channelName: "Tech Talk",
+    messages: [
+      {
+        messageId: 5,
+        text: "Any one fan of xbox here?",
+        time: "02:30 PM",
+        userId: 2,
+      },
+      {
+        messageId: 6,
+        text: "That's me!",
+        time: "02:32 PM",
+        userId: 1,
+      },
+    ],
+  },
+  {
+    channelId: 7,
+    channelName: "Sports",
+    messages: [
+      {
+        messageId: 5,
+        text: "Pakistan's performance on Champion's Trophy was pretty bad",
+        time: "02:30 PM",
+        userId: 1,
+      },
+      {
+        messageId: 6,
+        text: "Our national game is hockey anyway",
+        time: "02:32 PM",
+        userId: 2,
       },
     ],
   },
@@ -84,12 +134,12 @@ const allUsers = [
     {
         id: 1,
         name: 'Shehzad Nizamani',
-        profilePicture: '/law.jpg',
+        profilePicture: '/shehzad.jpg',
     },
     {
         id: 2,
-        name: 'Aamir Nizamani',
-        profilePicture: '/law.jpg',
+        name: 'Mama Miya',
+        profilePicture: '/miya.jpg',
     },
 ];
 

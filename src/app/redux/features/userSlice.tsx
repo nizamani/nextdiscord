@@ -9,7 +9,7 @@ interface UserState {
 const initialState: UserState = {
   id: 1,
   name: 'Shehzad Nizamani',
-  profilePicture: 'law.jpg',
+  profilePicture: '/shehzad.jpg',
 };
 
 const userSlice = createSlice({
