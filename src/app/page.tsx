@@ -4,6 +4,9 @@ import { RootState } from '../app/redux/store';
 import ChatArea from '../app/components/ChatArea';
 import Sidebar from '../app/components/Sidebar';
 
+// id of currently logged in user
+// const currentUserId = 1;
+
 const ChatApp = () => {
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
 
