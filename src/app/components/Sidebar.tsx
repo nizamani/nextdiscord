@@ -1,12 +1,13 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
-import { setCurrentChannel } from '../redux/features/channelSlice';
+import { fetchChannelsWithMessages, setCurrentChannel } from '../redux/features/channelSlice';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 export default function Sidebar() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
     // get theme mode dark/light
     const darkMode = useSelector((state: RootState) => state.theme.darkMode);
@@ -18,51 +19,13 @@ export default function Sidebar() {
     // get current user using user slice to display user's profile picture and their full name
     const user = useSelector((state: RootState) => state.user);
 
-    // this will come inside useEffect from backend
-    const channels = [
-        {
-            key: 1,
-            name: 'General',
-            icon: '🏠',
-            isFavorite: false,
-        },
-        {
-            key: 2,
-            name: 'Gaming',
-            icon: '🎲',
-            isFavorite: false,
-        },
-        {
-            key: 3,
-            name: 'Coding',
-            icon: '#',
-            isFavorite: false,
-        },
-        {
-            key: 4,
-            name: 'Movies',
-            icon: '#',
-            isFavorite: false,
-        },
-        {
-            key: 5,
-            name: 'Music',
-            icon: '🎸',
-            isFavorite: false,
-        },
-        {
-            key: 6,
-            name: 'Tech Talk',
-            icon: '🧑🏻‍💻',
-            isFavorite: true,
-        },
-        {
-            key: 7,
-            name: 'Sports',
-            icon: '🥎',
-            isFavorite: true,
-        },
-    ];
+    // get channels
+    const { channels, loading, error } = useSelector((state: RootState) => state.channel);
+
+    useEffect(() => {
+        dispatch(fetchChannelsWithMessages());
+        console.log(channels);
+    }, [dispatch]);
     
   return (
     <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"}
@@ -92,7 +55,7 @@ export default function Sidebar() {
             {channels.map((channel) => (
                 // only favorite channels will be shown here
                 (channel.isFavorite) ?
-                <li onClick={() => dispatch(setCurrentChannel(channel.key))} key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
                 {channel.icon} {channel.name}
                 </li>
                 // non-favorite channels won't be shown
@@ -114,7 +77,7 @@ export default function Sidebar() {
             <ul className="mt-2">
                 {channels.map((channel) => (
                     (!channel.isFavorite) ?
-                    <li onClick={() => dispatch(setCurrentChannel(channel.key))} key={channel.key} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
                     {channel.icon} {channel.name} <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
                     </li>
                     // favorite channel won't be shown here

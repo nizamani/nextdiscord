@@ -1,133 +1,11 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/features/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
 import Image from 'next/image';
-
-const discordChannels = [
-  {
-    channelId: 1,
-    channelName: "General",
-    messages: [
-      {
-        messageId: 1,
-        text: "Hello everyone!",
-        time: "10:30 AM",
-        userId: 1,
-      },
-      {
-        messageId: 2,
-        text: "How's it going?",
-        time: "10:41 AM",
-        userId: 2,
-      },
-    ],
-  },
-  {
-    channelId: 2,
-    channelName: "Gaming",
-    messages: [
-      {
-        messageId: 3,
-        text: "Anyone up for a match?",
-        time: "01:30 PM",
-        userId: 1,
-      },
-    ],
-  },
-  {
-    channelId: 3,
-    channelName: "Coding",
-    messages: [
-      {
-        messageId: 4,
-        text: "Does anyone know Redux well?",
-        time: "02:30 PM",
-        userId: 2,
-      },
-      {
-        messageId: 5,
-        text: "Yes, I can help!",
-        time: "02:32 PM",
-        userId: 1,
-      },
-    ],
-  },
-  {
-    channelId: 4,
-    channelName: "Movies",
-    messages: [
-      {
-        messageId: 5,
-        text: "Does anyone know good movies?",
-        time: "02:30 PM",
-        userId: 2,
-      },
-      {
-        messageId: 6,
-        text: "Yes, Bataman Dark Knight!",
-        time: "02:32 PM",
-        userId: 1,
-      },
-    ],
-  },
-  {
-    channelId: 5,
-    channelName: "Music",
-    messages: [
-      {
-        messageId: 5,
-        text: "Your favorite song?",
-        time: "02:30 PM",
-        userId: 1,
-      },
-      {
-        messageId: 6,
-        text: "I don't have any!",
-        time: "02:32 PM",
-        userId: 2,
-      },
-    ],
-  },
-  {
-    channelId: 6,
-    channelName: "Tech Talk",
-    messages: [
-      {
-        messageId: 5,
-        text: "Any one fan of xbox here?",
-        time: "02:30 PM",
-        userId: 2,
-      },
-      {
-        messageId: 6,
-        text: "That's me!",
-        time: "02:32 PM",
-        userId: 1,
-      },
-    ],
-  },
-  {
-    channelId: 7,
-    channelName: "Sports",
-    messages: [
-      {
-        messageId: 5,
-        text: "Pakistan's performance on Champion's Trophy was pretty bad",
-        time: "02:30 PM",
-        userId: 1,
-      },
-      {
-        messageId: 6,
-        text: "Our national game is hockey anyway",
-        time: "02:32 PM",
-        userId: 2,
-      },
-    ],
-  },
-];
-
+import { useEffect } from 'react';
+import { fetchChannelsWithMessages } from '../redux/features/channelSlice';
 
 // all users are gotten in chatarea only
 const allUsers = [
@@ -144,19 +22,20 @@ const allUsers = [
 ];
 
 const ChatArea = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
+
+  useEffect(() => {
+    dispatch(fetchChannelsWithMessages());
+  }, [dispatch]);
 
   // get theme settings
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
   const fontSize = useSelector((state: RootState) => state.theme.fontSize);
 
   // get current channel from state
-  const currentChannelId = useSelector(
-    (state: RootState) => state.channel.currentChannelId,
+  const currentChannel = useSelector(
+    (state: RootState) => state.channel.currentChannel,
   );
-
-  // Find messages of current channel
-  const currentChannel = discordChannels.find((channel) => channel.channelId === currentChannelId);
 
   // get id of current user
   const currentUserId = useSelector((state: RootState) => state.user.id);
@@ -194,7 +73,7 @@ const ChatArea = () => {
 
       {/* Chat Messages */}
       <div className={`flex flex-col space-y-4 ${fontSize}`}>
-      {currentChannel?.messages.map((message) => (
+      {currentChannel?.messages && currentChannel?.messages.map((message) => (
         <div key={message.messageId} 
         className={`flex items-start gap-3 p-3 rounded-lg 
           ${darkMode ? (message.userId === currentUserId ? "bg-gray-900 text-white" : "bg-gray-800 text-white") :
