@@ -19,12 +19,13 @@ export default function Sidebar() {
     // get current user using user slice to display user's profile picture and their full name
     const user = useSelector((state: RootState) => state.user);
 
-    // get channels
-    const { channels, loading, error } = useSelector((state: RootState) => state.channel);
+    // get initial value of channels, this will return an empty array
+    const { channels } = useSelector((state: RootState) => state.channel);
 
+    // one we have dispatched channges from database, this will update redux store causing virtual dom to
+    // update and display all the channels in the sidebar
     useEffect(() => {
         dispatch(fetchChannelsWithMessages());
-        console.log(channels);
     }, [dispatch]);
     
   return (

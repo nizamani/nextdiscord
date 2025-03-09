@@ -32,12 +32,11 @@ const ChatArea = () => {
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
   const fontSize = useSelector((state: RootState) => state.theme.fontSize);
 
-  // get current channel from state
-  const currentChannel = useSelector(
-    (state: RootState) => state.channel.currentChannel,
-  );
+  // current channel will be "General" because that is set as initial current channel value. When user clicks on
+  // a channel from sidebar, this will update to that channel
+  const currentChannel = useSelector((state: RootState) => state.channel.currentChannel);
 
-  // get id of current user
+  // id of currently logged in user
   const currentUserId = useSelector((state: RootState) => state.user.id);
 
   // Create a user lookup object outside the JSX loop
