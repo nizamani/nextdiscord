@@ -21,6 +21,10 @@ export default function Sidebar() {
     // get initial value of channels, this will return an empty array
     const { channels, loading } = useSelector((state: RootState) => state.channel);
     
+    // current channel will be "General" because that is set as initial current channel value. When user clicks on
+    // a channel from sidebar, this will update to that channel. Based on this we will highlight current channel
+    const currentChannel = useSelector((state: RootState) => state.channel.currentChannel);
+
   return (
     <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"}
      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} 
@@ -58,8 +62,14 @@ export default function Sidebar() {
                 {channels.map((channel) => (
                     // only favorite channels will be shown here
                     (channel.isFavorite) ?
-                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} 
+                    className={`${darkMode ?
+                     ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
+                      : ((channel.id === currentChannel?.id) ? "bg-indigo-300 text-gray-900" : "bg-indigo-200 text-gray-900")}
+                       font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
                     {channel.icon} {channel.name}
+                    {/* display unread messages count only if user have unread msgs for this channel */}
+                    {channel.unreadMsgCount > 0 ? <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{channel.unreadMsgCount}</span> : '' }
                     </li>
                     // non-favorite channels won't be shown
                     : ''
@@ -72,8 +82,14 @@ export default function Sidebar() {
             <ul className="mt-2">
                 {channels.map((channel) => (
                     (!channel.isFavorite) ?
-                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                    {channel.icon} {channel.name} <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
+                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} 
+                    className={`${darkMode ?
+                     ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
+                      : ((channel.id === currentChannel?.id) ? "bg-indigo-300 text-gray-900" : "bg-indigo-200 text-gray-900")}
+                       font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                    {channel.icon} {channel.name}
+                    {/* display unread messages count only if user have unread msgs for this channel */}
+                    {channel.unreadMsgCount > 0 ? <span id="unread-general" className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{channel.unreadMsgCount}</span> : '' }
                     </li>
                     // favorite channel won't be shown here
                     : ''

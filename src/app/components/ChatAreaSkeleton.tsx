@@ -1,7 +1,7 @@
 const ChatAreaSkeleton = () => {
 return (
     <main className="flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow bg-gray-100 animate-pulse">
-    
+
     {/* Burger Menu Button */}
     <div className="w-12 md:hidden h-10 bg-gray-400 rounded-lg"></div>
 

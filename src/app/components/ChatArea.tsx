@@ -24,10 +24,6 @@ const allUsers = [
 const ChatArea = () => {
   const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
-  // useEffect(() => {
-  //   dispatch(fetchChannelsWithMessages());
-  // }, [dispatch]);
-
   // get theme settings
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
   const fontSize = useSelector((state: RootState) => state.theme.fontSize);
@@ -72,7 +68,7 @@ const ChatArea = () => {
 
       {/* Chat Messages */}
       <div className={`flex flex-col space-y-4 ${fontSize}`}>
-      {currentChannel?.messages && currentChannel?.messages.map((message) => (
+      {currentChannel !== undefined && currentChannel?.messages && currentChannel?.messages.map((message) => (
         <div key={message.messageId} 
         className={`flex items-start gap-3 p-3 rounded-lg 
           ${darkMode ? (message.userId === currentUserId ? "bg-gray-900 text-white" : "bg-gray-800 text-white") :
@@ -87,7 +83,7 @@ const ChatArea = () => {
               <div>
                   <p className="font-bold">
                     {userMap[message.userId]?.name || "Unknown"}
-                    <span className={`text-sm ${darkMode ? "text-white" : "text-gray-700"}`}> {message.time}</span>
+                    <span className={`text-sm ${darkMode ? "text-gray-500" : "text-gray-700"}`}> {message.time}</span>
                   </p>
                   <p className="chat-text">{message.text}</p>
               </div>

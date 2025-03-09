@@ -17,6 +17,7 @@ const ChatApp = () => {
         dispatch(fetchChannelsWithMessages()).unwrap().then((channels) => {
             if (channels.length > 0) {
                 dispatch(setCurrentChannel(channels[0])); // Set the first channel
+                console.log(channels);
             }
         }).catch((error) => {
             console.error("Failed to fetch channels:", error);
