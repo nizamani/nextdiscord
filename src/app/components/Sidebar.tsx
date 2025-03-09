@@ -2,9 +2,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
-import { fetchChannelsWithMessages, setCurrentChannel } from '../redux/features/channelSlice';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { setCurrentChannel } from '../redux/features/channelSlice';
 
 export default function Sidebar() {
     const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
@@ -20,13 +19,7 @@ export default function Sidebar() {
     const user = useSelector((state: RootState) => state.user);
 
     // get initial value of channels, this will return an empty array
-    const { channels } = useSelector((state: RootState) => state.channel);
-
-    // one we have dispatched channges from database, this will update redux store causing virtual dom to
-    // update and display all the channels in the sidebar
-    useEffect(() => {
-        dispatch(fetchChannelsWithMessages());
-    }, [dispatch]);
+    const { channels, loading } = useSelector((state: RootState) => state.channel);
     
   return (
     <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"}
@@ -50,20 +43,6 @@ export default function Sidebar() {
             ): ''}
         </div>
 
-        {/* Favorite Channels */}
-        <h2 className="text-lg font-bold">Favorite Channels</h2>
-        <ul className="mt-2">
-            {channels.map((channel) => (
-                // only favorite channels will be shown here
-                (channel.isFavorite) ?
-                <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
-                {channel.icon} {channel.name}
-                </li>
-                // non-favorite channels won't be shown
-                : ''
-            ))}
-        </ul>
-
         {/* Inbox */}
         <h2 className="text-lg font-bold">Inbox</h2>
         <div className="flex justify-center items-center">
@@ -71,7 +50,22 @@ export default function Sidebar() {
         </div>
 
         {/* Channels */}
+        {!loading && channels.length > 0 ?
         <div>
+            {/* Favorite Channels */}
+            <h2 className="text-lg font-bold">Favorite Channels</h2>
+            <ul className="mt-2">
+                {channels.map((channel) => (
+                    // only favorite channels will be shown here
+                    (channel.isFavorite) ?
+                    <li onClick={() => dispatch(setCurrentChannel(channel))} key={channel.id} className={`${darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"} font-bold p-2 rounded cursor-pointer sidebar-content flex justify-between items-center`}>
+                    {channel.icon} {channel.name}
+                    </li>
+                    // non-favorite channels won't be shown
+                    : ''
+                ))}
+            </ul>
+
             <h2 className="text-lg font-bold">
             Channels
             </h2>
@@ -86,6 +80,10 @@ export default function Sidebar() {
                 ))}
             </ul>
         </div>
+        : 
+            // Shows loader until we receive some data
+            <div className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+        }
     </aside>
   )
 }

@@ -4,8 +4,8 @@ import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/features/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { fetchChannelsWithMessages } from '../redux/features/channelSlice';
+// import { useEffect } from 'react';
+// import { fetchChannelsWithMessages } from '../redux/features/channelSlice';
 
 // all users are gotten in chatarea only
 const allUsers = [
@@ -24,9 +24,9 @@ const allUsers = [
 const ChatArea = () => {
   const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
-  useEffect(() => {
-    dispatch(fetchChannelsWithMessages());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchChannelsWithMessages());
+  // }, [dispatch]);
 
   // get theme settings
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);

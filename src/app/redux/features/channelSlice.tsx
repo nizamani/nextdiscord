@@ -24,7 +24,7 @@ export interface ChannelState {
 }
 
 // Fetch channels and messages together
-export const fetchChannelsWithMessages = createAsyncThunk(
+export const fetchChannelsWithMessages = createAsyncThunk<Channel[]>(
     "channels/fetchChannelsWithMessages",
     async () => {
       const [channelsRes, messagesRes] = await Promise.all([
