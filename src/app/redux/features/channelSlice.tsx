@@ -117,18 +117,18 @@ const themeSlice = createSlice({
           state.currentChannel = action.payload;
 
           // Find the latest message in the selected channel
-          const channel: Channel[] = state.channels.find(ch => ch.id === action.payload.id);
-          if (channel && channel.messages.length > 0) {
-              const latestMessageId = Math.max(...channel.messages.map(msg => msg.messageId));
+          // const channel: Channel[] = state.channels.find(ch => ch.id === action.payload.id);
+          // if (channel && channel.messages.length > 0) {
+          //     const latestMessageId = Math.max(...channel.messages.map(msg => msg.messageId));
 
-              // Update readMsgs array
-              const readMsgIndex = state.readMsgs.findIndex(rm => rm.channelId === channel.id);
-              if (readMsgIndex !== -1) {
-                  state.readMsgs[readMsgIndex].readMsgId = latestMessageId;
-              } else {
-                  state.readMsgs.push({ channelId: channel.id, readMsgId: latestMessageId });
-              }
-          }
+          //     // Update readMsgs array
+          //     const readMsgIndex = state.readMsgs.findIndex(rm => rm.channelId === channel.id);
+          //     if (readMsgIndex !== -1) {
+          //         state.readMsgs[readMsgIndex].readMsgId = latestMessageId;
+          //     } else {
+          //         state.readMsgs.push({ channelId: channel.id, readMsgId: latestMessageId });
+          //     }
+          // }
         },
     },
     extraReducers: (builder) => {
