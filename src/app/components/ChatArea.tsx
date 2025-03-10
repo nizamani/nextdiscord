@@ -1,8 +1,8 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store';
-import { toggleSidebar } from '../redux/features/sidebarSlice';
-import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
+import { toggleSidebar } from '../redux/reducers/sidebarSlice';
+import { toggleDarkMode, setFontSize } from '../redux/reducers/themeSlice';
 import Image from 'next/image';
 
 type AllUsersData = {

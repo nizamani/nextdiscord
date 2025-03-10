@@ -1,10 +1,10 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
+import { toggleSidebar, toggleSettingsMenu } from '../redux/reducers/sidebarSlice';
 import Image from 'next/image';
 import { markChannelAsRead, setCurrentChannel } from '../redux/reducers/channelSlice';
-import { setCurrentUser } from '../redux/features/userSlice';
+import { setCurrentUser } from '../redux/reducers/userSlice';
 
 type AllUsersData = {
     id: number,

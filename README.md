@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Discord
 
-## Getting Started
+This is a Discord-like chat application built using **Next.js**, **Redux**, and **Firebase Firestore**.
 
-First, run the development server:
+## Features
 
+- 🌍 **Next.js for server-side rendering and performance optimization**
+- ⚡ **State management with Redux** for seamless user experience
+- 📝 **Channel-based messaging** with message history
+- 🎨 **Responsive UI** with Tailwind CSS
+- 🚀 **Upcoming Feature:** Real-time messaging using Pusher
+
+## Live Demo
+Check out the live demo on Vercel:
+🔗 [NextDiscord Demo](https://nextdiscord-swart.vercel.app/)
+
+## Tech Stack
+
+- **Next.js** - React framework for SSR and static site generation
+- **Redux** - Global state management
+- **Firebase Firestore** - NoSQL database for storing messages and user data
+- **Tailwind CSS** - Styling framework for modern UI
+- **React Hooks** - Efficient state and lifecycle management
+- **Pusher (Coming Soon)** - Real-time messaging
+
+## Installation
+
+### Prerequisites
+Ensure you have Node.js and npm/yarn installed.
+
+### Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone git@github.com:nizamani/nextdiscord.git
+cd discord-clone
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install dependencies
+```bash
+npm install  # or yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Setup Firebase
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+2. Enable **Firestore Database** and **Authentication**.
+3. Copy `.env.example` to `.env.local` and add your Firebase credentials:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# .env.local (DO NOT COMMIT THIS FILE)
+FIREBASE_API_KEY=
+FIREBASE_AUTH_DOMAIN=
+FIREBASE_PROJECT_ID=
+FIREBASE_STORAGE_BUCKET=
+FIREBASE_MESSAGING_SENDER_ID=
+FIREBASE_APP_ID=
+FIREBASE_MEASUREMENT_ID=
+```
 
-## Learn More
+### Run the application
+```bash
+npm run dev  # or yarn dev
+```
+The app will be available at `http://localhost:3000`
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
+```
+📦 nextdiscord
+├── 📂 components   # Reusable React components
+├── 📂 pages        # Next.js pages
+├── 📂 redux        # Redux store and slices
+├── 📂 types        # Types used through out the app
+├── 📂 firebase     # Firebase configuration
+├── 📂 public       # Static assets like images
+├── .env.example    # Example environment variables
+├── .env.local      # Environment variables (ignored in Git)
+└── next.config.js  # Next.js configuration
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Future Enhancements
+- 🔐 OAuth authentication (Google, GitHub, etc.)
+- 📢 Voice and video call integration
+- 🚀 Message reactions and thread replies
+- 👥 **User authentication** (Firebase Auth or custom implementation)
+- 📸 **User profile management** with avatars
+- 🔄 **Real-time messaging using Pusher**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
+Pull requests are welcome! Feel free to fork the repo and submit improvements.
 
-## Deploy on Vercel
+## License
+This project is licensed under the **MIT License**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
+Made with ❤️ using Next.js and Firebase!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

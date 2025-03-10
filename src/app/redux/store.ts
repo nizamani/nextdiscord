@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import themeReducer from "./features/themeSlice"; // Your existing chat slice
-import sidebarSlice from "./features/sidebarSlice"; // Your existing chat slice
-import userReducer from "./features/userSlice"; // Import new user slice
+import themeReducer from "./reducers/themeSlice"; // Your existing chat slice
+import sidebarSlice from "./reducers/sidebarSlice"; // Your existing chat slice
+import userReducer from "./reducers/userSlice"; // Import new user slice
 import channelReducer from "./reducers/channelSlice"; // Import new user slice
 
 export const store = configureStore({
