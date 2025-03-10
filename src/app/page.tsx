@@ -3,10 +3,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/redux/store';
 import ChatArea from '../app/components/ChatArea';
 import Sidebar from '../app/components/Sidebar';
-import { fetchChannelsWithMessages, setCurrentChannel } from './redux/features/channelSlice';
+import { setCurrentChannel } from './redux/reducers/channelSlice';
 import { useEffect } from 'react';
 import SidebarSkeleton from './components/SidebarSkeleton';
 import ChatAreaSkeleton from './components/ChatAreaSkeleton';
+import { fetchChannelsWithMessages } from './redux/thunks/channelThunks';
+
+// all users are gotten in chatarea only
+interface User {
+    id: number;
+    name: string;
+    profilePicture: string;
+  }
+
+const allUsers: User[] = [
+    {
+        id: 1,
+        name: 'Shehzad Nizamani',
+        profilePicture: '/shehzad.jpg',
+    },
+    {
+        id: 2,
+        name: 'Miya',
+        profilePicture: '/miya.jpg',
+    }
+];
 
 const ChatApp = () => {
     const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
@@ -37,10 +58,10 @@ const ChatApp = () => {
             {channels.length > 0 ? (
             <>
                 {/* Sidebar */}
-                <Sidebar />
+                <Sidebar allUsers={allUsers} />
 
                 {/* Main Chat Area */}
-                <ChatArea />
+                <ChatArea allUsers={allUsers} />
             </>
             ) : (
                 <>

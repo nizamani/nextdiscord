@@ -4,24 +4,14 @@ import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/features/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/features/themeSlice';
 import Image from 'next/image';
-// import { useEffect } from 'react';
-// import { fetchChannelsWithMessages } from '../redux/features/channelSlice';
 
-// all users are gotten in chatarea only
-const allUsers = [
-    {
-        id: 1,
-        name: 'Shehzad Nizamani',
-        profilePicture: '/shehzad.jpg',
-    },
-    {
-        id: 2,
-        name: 'Miya',
-        profilePicture: '/miya.jpg',
-    },
-];
+type AllUsersData = {
+  id: number,
+  name: string,
+  profilePicture: string,
+};
 
-const ChatArea = () => {
+const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
   const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
   // get theme settings

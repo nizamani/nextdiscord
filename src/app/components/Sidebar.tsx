@@ -3,9 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/features/sidebarSlice';
 import Image from 'next/image';
-import { markChannelAsRead, setCurrentChannel } from '../redux/features/channelSlice';
+import { markChannelAsRead, setCurrentChannel } from '../redux/reducers/channelSlice';
+import { setCurrentUser } from '../redux/features/userSlice';
 
-export default function Sidebar() {
+type AllUsersData = {
+    id: number,
+    name: string,
+    profilePicture: string,
+};
+
+export default function Sidebar({ allUsers }: { allUsers: AllUsersData[] }) {
+    console.log(allUsers);
     const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
     // await testFirestoreFetch();
@@ -27,8 +35,17 @@ export default function Sidebar() {
     // a channel from sidebar, this will update to that channel. Based on this we will highlight current channel
     const currentChannel = useSelector((state: RootState) => state.channel.currentChannel);
 
-    // id of currently logged in user
-    const currentUserId = useSelector((state: RootState) => state.user.id);
+    // get currently logged in user
+    const currentUser = useSelector((state: RootState) => state.user);
+
+    // Find the user who is NOT the current user
+    const otherUser = allUsers.find((user) => user.id !== currentUser.id);
+
+    // switches from current user to other user into redux store
+    const handleUserSwitch = () => {
+        if (!otherUser) return null; // Ensure there is an alternate user
+        dispatch(setCurrentUser(otherUser)); // Update Redux store with the new user
+    };
 
   return (
     <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}
@@ -46,7 +63,20 @@ export default function Sidebar() {
             {isSettingsMenuOpen ? (
                 <div className="absolute left-0 top-10 mt-2 w-48 shadow-lg">
                     <ul className={`rounded-lg ${darkMode ? "bg-gray-600 text-white" : "bg-gray-100 text-gray-900"} py-2 text-gray-700`}>
-                        <li><button className={`${darkMode ? "bg-gray-600 text-white" : "bg-gray-100 text-gray-900 hover:bg-gray-200"}  w-full text-left px-4 py-2`}>Logout</button></li>
+                    <li>
+                        <button
+                            onClick={handleUserSwitch}
+                            className={`${
+                            darkMode
+                                ? "bg-gray-600 text-white"
+                                : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                            } w-full text-left px-4 py-2 flex items-center gap-2`}
+                        >
+                            <Image src={otherUser?.profilePicture  || "/default.jpg"} alt={otherUser?.name || 'Unknown'} 
+                            className="w-8 h-8 rounded-full object-cover" width={32} height={32} />
+                            <span>Switch to {otherUser && (otherUser?.name).split(" ")[0]}</span>
+                        </button>
+                        </li>
                     </ul>
                 </div>
             ): ''}
@@ -67,7 +97,7 @@ export default function Sidebar() {
                 {channels.map((channel) => (
                     // only favorite channels will be shown here
                     (channel.isFavorite) ?
-                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUserId));}} key={channel.id} 
+                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
                     className={`${darkMode ?
                      ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
                       : ((channel.id === currentChannel?.id) ? "bg-gray-300 text-gray-900" : "bg-gray-200 text-gray-900")}
@@ -87,7 +117,7 @@ export default function Sidebar() {
             <ul className="mt-2">
                 {channels.map((channel) => (
                     (!channel.isFavorite) ?
-                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUserId));}} key={channel.id} 
+                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
                     className={`${darkMode ?
                      ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
                       : ((channel.id === currentChannel?.id) ? "bg-gray-300 text-gray-900" : "bg-gray-200 text-gray-900")}

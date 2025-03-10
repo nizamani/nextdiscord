@@ -13,11 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ...doc.data(),
       }));
   
-      // return messages; // Returns an array of messages
+      // Returns an array of messages as  200 response
       res.status(200).json(messages);
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Error fetching channels" });
+      res.status(500).json({ error });
     }
 
   } else {
