@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk  } from '@reduxjs/toolkit';
 
 export interface Message {
-    messageId: number;
+    id: number;
     channelId: number;
     text: string;
     time: string;
@@ -68,7 +68,7 @@ const updateReadMsgCount = (channels: Channel[], readMsgs: ReadMsgs[]) => {
       
       // user has read some messages and channel has some messages 
       if (readMsg && channel.messages) {
-          const unreadCount = channel.messages.filter(msg => msg.messageId > readMsg.readMsgId).length;
+          const unreadCount = channel.messages.filter(msg => msg.id > readMsg.readMsgId).length;
           return { ...channel, unreadMsgCount: unreadCount };
 
           // There are no unread messages since channel doesn't have any messages
@@ -86,7 +86,7 @@ export const fetchChannelsWithMessages = createAsyncThunk<Channel[]>(
     async () => {
       const [channelsRes, messagesRes] = await Promise.all([
         fetch("/api/channels"),  // API endpoint for channels
-        fetch("/api/messages"),  // API endpoint for messages
+        fetch("/api/messages?action=getmessages"),  // API endpoint for messages
       ]);
   
       const channels: Channel[] = await channelsRes.json();
@@ -115,20 +115,6 @@ const themeSlice = createSlice({
     reducers: {
         setCurrentChannel: (state, action) => {
           state.currentChannel = action.payload;
-
-          // Find the latest message in the selected channel
-          // const channel: Channel[] = state.channels.find(ch => ch.id === action.payload.id);
-          // if (channel && channel.messages.length > 0) {
-          //     const latestMessageId = Math.max(...channel.messages.map(msg => msg.messageId));
-
-          //     // Update readMsgs array
-          //     const readMsgIndex = state.readMsgs.findIndex(rm => rm.channelId === channel.id);
-          //     if (readMsgIndex !== -1) {
-          //         state.readMsgs[readMsgIndex].readMsgId = latestMessageId;
-          //     } else {
-          //         state.readMsgs.push({ channelId: channel.id, readMsgId: latestMessageId });
-          //     }
-          // }
         },
     },
     extraReducers: (builder) => {

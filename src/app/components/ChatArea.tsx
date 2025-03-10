@@ -69,7 +69,7 @@ const ChatArea = () => {
       {/* Chat Messages */}
       <div className={`flex flex-col space-y-4 ${fontSize}`}>
       {currentChannel !== undefined && currentChannel?.messages && currentChannel?.messages.map((message) => (
-        <div key={message.messageId} 
+        <div key={message.id} 
         className={`flex items-start gap-3 p-3 rounded-lg 
           ${darkMode ? (message.userId === currentUserId ? "bg-gray-900 text-white" : "bg-gray-800 text-white") :
            (message.userId === currentUserId ? "bg-indigo-400" : "bg-indigo-300")}`}>

@@ -30,8 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env file (only .env is ignored, we have .env.example which needs to be committed in git)
+.env
 
 # vercel
 .vercel
@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# file for local testing
+src/pages/api/addfirebasedata.ts
