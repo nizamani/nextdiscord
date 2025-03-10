@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk  } from '@reduxjs/toolkit';
+import { AppDispatch } from '../store';
 
 export interface Message {
     id: number;
-    channelId: number;
+    channelId: string;
     text: string;
     time: string;
     userId: number;
 }
 
 export interface Channel {
-    id: number;
+    id: string;
     name: string;
     icon: string;
     isFavorite: boolean;
@@ -17,49 +18,24 @@ export interface Channel {
     messages?: Message[];
 }
 
+type UnreadMessages = {
+  id: string;
+  userId: number;
+  channelId: string;
+};
+
 export interface ChannelState {
     currentChannel: Channel | undefined;
+    unreadMessages: UnreadMessages[], 
     channels: Channel[];
     loading: boolean;
     error: string | undefined;
 }
 
 export interface ReadMsgs {
-  channelId: number;
+  channelId: string;
   readMsgId: number;
 }
-
-// read messages array
-const readMsgs: ReadMsgs[] = [
-  {
-    channelId: 1,
-    readMsgId: 1,
-  },
-  {
-    channelId: 2,
-    readMsgId: 2
-  },
-  {
-    channelId: 3,
-    readMsgId: 3
-  },
-  {
-    channelId: 4,
-    readMsgId: 4
-  },
-  {
-    channelId: 5,
-    readMsgId: 5
-  },
-  {
-    channelId: 6,
-    readMsgId: 10
-  },
-  {
-    channelId: 7,
-    readMsgId: 7
-  },
-];
 
 // calculate unread msgs for each channel
 const updateReadMsgCount = (channels: Channel[], readMsgs: ReadMsgs[]) => {
@@ -81,16 +57,18 @@ const updateReadMsgCount = (channels: Channel[], readMsgs: ReadMsgs[]) => {
 };
 
 // Fetch channels and messages together
-export const fetchChannelsWithMessages = createAsyncThunk<Channel[]>(
+export const fetchChannelsWithMessages = createAsyncThunk<Channel[], number>(
     "channels/fetchChannelsWithMessages",
-    async () => {
-      const [channelsRes, messagesRes] = await Promise.all([
+    async (userId: number) => {
+      const [channelsRes, messagesRes, readMsgsRes] = await Promise.all([
         fetch("/api/channels"),  // API endpoint for channels
         fetch("/api/messages?action=getmessages"),  // API endpoint for messages
+        fetch(`/api/messages?action=getunreadmessages&userId=${userId}`)
       ]);
   
       const channels: Channel[] = await channelsRes.json();
       const messages: Message[] = await messagesRes.json();
+      const readMsgs: ReadMsgs[] = await readMsgsRes.json();
   
       // Combine messages into corresponding channels and update unreadMsgCount
       const updatedChannels = channels.map((channel) => ({
@@ -102,8 +80,32 @@ export const fetchChannelsWithMessages = createAsyncThunk<Channel[]>(
     }
   );
 
+// Async action to update read message in Firebase
+export const updateReadMessage = createAsyncThunk(
+  "channels/updateReadMessage",
+  async ({ channelId, userId }: { channelId: string; userId: number }, { getState }) => {
+
+    const state = getState() as { channel: ChannelState };
+    const channel = state.channel.channels.find(c => c.id === channelId);
+    if (!channel || !channel.messages || channel.messages.length === 0) return null;
+
+    const mostRecentMessageId = channel.messages[channel.messages.length - 1].id;
+
+    // update channel read message id into database
+    await fetch(
+      `/api/messages?action=updatereadmsgid&userId=${userId}&mostRecentMessageId=${mostRecentMessageId}`+
+      `&channelId=${channelId}`
+    );
+
+    console.log('After fetch = ', channelId, mostRecentMessageId);
+
+      return { channelId, readMessageId: mostRecentMessageId };
+  }
+);
+
 const initialState: ChannelState = {
     currentChannel: undefined,
+    unreadMessages: [],
     channels: [],
     loading: false,
     error: undefined,
@@ -116,6 +118,16 @@ const themeSlice = createSlice({
         setCurrentChannel: (state, action) => {
           state.currentChannel = action.payload;
         },
+        setUnreadMessages: (state, action) => {
+          state.unreadMessages = action.payload;
+        },
+        setUnreadCountToZero: (state, action) => {
+          state.channels = state.channels.map(channel => 
+              channel.id === action.payload 
+                  ? { ...channel, unreadMsgCount: 0 } 
+                  : channel
+          );
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -129,9 +141,23 @@ const themeSlice = createSlice({
           .addCase(fetchChannelsWithMessages.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
-          });
+          })
+          /* .addCase(setUnreadCountToZero.fulfilled, (state, action) => {
+            state.channels = state.channels.map(channel =>
+                channel.id === action.payload.channelId
+                    ? { ...channel, readMessageId: action.payload.readMessageId }
+                    : channel
+            );
+        }); */
     },
 });
 
-export const { setCurrentChannel } = themeSlice.actions;
+// mark message as read and update database
+export const markChannelAsRead = (channelId: string, userId: number) => 
+  async (dispatch: AppDispatch) => {
+    dispatch(setUnreadCountToZero(channelId));
+    dispatch(updateReadMessage({ channelId, userId }));
+};
+
+export const { setCurrentChannel, setUnreadMessages, setUnreadCountToZero } = themeSlice.actions;
 export default themeSlice.reducer;

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../app/firebase"; // Import your Firestore instance
+import { db } from "../../app/firebase/firebase"; // Import your Firestore instance
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

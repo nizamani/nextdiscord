@@ -16,7 +16,7 @@ const allUsers = [
     },
     {
         id: 2,
-        name: 'Mama Miya',
+        name: 'Miya',
         profilePicture: '/miya.jpg',
     },
 ];
@@ -43,11 +43,11 @@ const ChatArea = () => {
 
 
   return (
-    <main className={`flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-indigo-100"}`}>
+    <main className={`flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
       
       {/* Burger Menu Button */}
       <button onClick={() => dispatch(toggleSidebar())}
-        className={`${darkMode ? "bg-gray-900" : "bg-indigo-600"}
+        className={`${darkMode ? "bg-gray-900" : "bg-gray-70"}
         w-12 md:hidden p-2 text-white rounded-lg`}>
         ☰
       </button>
@@ -55,11 +55,11 @@ const ChatArea = () => {
       {/* Theme Toggle & Font Size */}
       <div className="flex justify-center items-center gap-4 mb-4">
           <button onClick={() => dispatch(toggleDarkMode())}
-          className={`${darkMode ? "bg-gray-900" : "bg-indigo-600"} text-white px-4 py-2 rounded-lg`}>
+          className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
             Toggle Dark Mode
           </button>
           <select onChange={(e) => dispatch(setFontSize(e.target.value))} value={fontSize}
-          className={`${darkMode ? "bg-gray-900" : "bg-indigo-600"} text-white px-4 py-2 rounded-lg`}>
+          className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
               <option value="text-sm">Small</option>
               <option value="text-base">Medium</option>
               <option value="text-lg">Large</option>
@@ -72,7 +72,7 @@ const ChatArea = () => {
         <div key={message.id} 
         className={`flex items-start gap-3 p-3 rounded-lg 
           ${darkMode ? (message.userId === currentUserId ? "bg-gray-900 text-white" : "bg-gray-800 text-white") :
-           (message.userId === currentUserId ? "bg-indigo-400" : "bg-indigo-300")}`}>
+           (message.userId === currentUserId ? "bg-gray-400" : "bg-gray-300")}`}>
             <Image 
               src={userMap[message.userId]?.profilePicture || "/default.jpg"}
               className="w-10 h-10 rounded-full object-fill"
@@ -92,9 +92,9 @@ const ChatArea = () => {
       </div>
 
       {/* Chat Input */}
-      <div className={`${darkMode ? "bg-gray-900" : "bg-indigo-200"} p-4 flex items-center fixed bottom-4 left-4 md:left-64 right-4 text-black`}>
+      <div className={`${darkMode ? "bg-gray-800" : "bg-gray-200"} p-4 flex items-center fixed bottom-4 left-4 md:left-64 right-4 text-black`}>
           <textarea className="bg-white flex-1 p-2 rounded border border-gray-400" rows={2} placeholder="Type your message..."></textarea>
-          <button className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-lg">Send</button>
+          <button className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg">Send</button>
       </div>
     </main>
   );

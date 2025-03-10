@@ -11,18 +11,20 @@ import ChatAreaSkeleton from './components/ChatAreaSkeleton';
 const ChatApp = () => {
     const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
 
+    // id of currently logged in user
+    const currentUserId = useSelector((state: RootState) => state.user.id);
+
     // one we have dispatched channges from database, this will update redux store causing virtual dom to
     // update and display all the channels in the sidebar
     useEffect(() => {
-        dispatch(fetchChannelsWithMessages()).unwrap().then((channels) => {
+        dispatch(fetchChannelsWithMessages(currentUserId)).unwrap().then((channels) => {
             if (channels.length > 0) {
                 dispatch(setCurrentChannel(channels[0])); // Set the first channel
-                console.log(channels);
             }
         }).catch((error) => {
             console.error("Failed to fetch channels:", error);
         });
-    }, [dispatch]);
+    }, [dispatch, currentUserId]);
 
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
 
@@ -30,7 +32,7 @@ const ChatApp = () => {
   const { channels } = useSelector((state: RootState) => state.channel);
 
     return (
-        <div className={`flex flex-col h-screen transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-indigo-500 text-gray-900"}`}>
+        <div className={`flex flex-col h-screen transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-500 text-gray-900"}`}>
             <div className="flex flex-1 overflow-hidden p-4">
             {channels.length > 0 ? (
             <>
