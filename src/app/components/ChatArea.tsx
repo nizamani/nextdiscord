@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/reducers/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/reducers/themeSlice';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { sendMessage } from '../redux/thunks/channelThunks';
 
 type AllUsersData = {
@@ -52,8 +52,23 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
       }
     };
 
+    // #region auto scroll to the bottom of the page
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    useEffect(() => {
+      scrollToBottom();
+      // Runs whenever currentChannel is changed so that we are always scrolling to the bottom when new messages
+      // are added to current channel
+    }, [currentChannel]);
+
   return (
-    <main className={`flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
+    <main className={`flex-1 p-6 flex flex-col gap-4 overflow-y-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
       
       {/* Burger Menu Button */}
       <button onClick={() => dispatch(toggleSidebar())}
@@ -99,6 +114,7 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
               </div>
           </div>
         ))}
+        <div ref={messagesEndRef} className='h-20' />
       </div>
 
       {/* Chat Input */}
