@@ -5,7 +5,8 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
-      const q = query(collection(db, "channels"), orderBy("order", "asc")); // Order by latest first
+      // get all of the channels from database
+      const q = query(collection(db, "channels"), orderBy("order", "asc")); // Order by oldest channel first
       const querySnapshot = await getDocs(q);
     
       const messages = querySnapshot.docs.map((doc) => ({

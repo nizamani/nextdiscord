@@ -1,7 +1,12 @@
 import { db } from "@/app/firebase/firebase";
-import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { Message } from "@/app/types";
+import { addDoc, collection, getDocs, limit, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
 
+/**
+ * this handles all of the incoming API calls to /api/messages endpoint. Even though we have broken down each
+ * AP call to it's own sub-functions but still main API calls go through this handler
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
@@ -50,9 +55,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-// get messages from database
+/** 
+ * get 25 most recent messages from database, this is so that we don't fetch all of the messages hence overloading
+ * our frontend with lot of information that it doesn't need to know on page load. If we want we can lazyload older
+ * messages
+ */
 async function getMessages() {
-    const q = query(collection(db, "messages"), orderBy("id", "asc")); // Order by latest first
+    const q = query(collection(db, "messages"), orderBy("id", "desc"), limit(25)); // Order by latest first
     const querySnapshot = await getDocs(q);
   
     const messages = querySnapshot.docs.map((doc) => ({
@@ -63,7 +72,9 @@ async function getMessages() {
     return messages;
 }
 
-// get unread messages as snapshot, meaning we will get real time updates when unread messages data changes
+/** 
+ * get unread messages as snapshot, meaning we will get real time updates when unread messages data changes
+ */
 async function getUnreadMessages(userId: string) {
   const userIdInt = parseInt(userId, 10);
 
@@ -82,6 +93,9 @@ async function getUnreadMessages(userId: string) {
     return messages;
 }
 
+/**
+ * update most recent read message id into firestore
+ */
 async function updatereadmsgid(channelId: string, userId: string, mostRecentMessageId: string) {
   const userIdInt = parseInt(userId, 10);
   const mostRecentMessageIdInt = parseInt(mostRecentMessageId, 10);
@@ -106,3 +120,9 @@ async function updatereadmsgid(channelId: string, userId: string, mostRecentMess
     await updateDoc(docSnap.ref, { readMsgId: mostRecentMessageIdInt });
   });
 }
+
+/** Save a new message to Firestore
+ */
+export const saveMessageToFirebase = async (message: Message): Promise<void> => {
+  await addDoc(collection(db, "messages"), message);
+};

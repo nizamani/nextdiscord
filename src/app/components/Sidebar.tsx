@@ -13,10 +13,7 @@ type AllUsersData = {
 };
 
 export default function Sidebar({ allUsers }: { allUsers: AllUsersData[] }) {
-    console.log(allUsers);
     const dispatch = useDispatch<AppDispatch>(); // Type dispatch correctly
-
-    // await testFirestoreFetch();
 
     // get theme mode dark/light
     const darkMode = useSelector((state: RootState) => state.theme.darkMode);

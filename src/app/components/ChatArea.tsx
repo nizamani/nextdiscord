@@ -4,8 +4,8 @@ import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/reducers/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/reducers/themeSlice';
 import Image from 'next/image';
-import { updateChannels } from '../redux/reducers/channelSlice';
 import { useState } from 'react';
+import { sendMessage } from '../redux/thunks/channelThunks';
 
 type AllUsersData = {
   id: number,
@@ -44,29 +44,13 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
     const currentChannel = channels.find((channel) => channel.id === selectedChannel?.id);
   
     // handle when user sends a message
-    const handleSendMessage = () => {
-      if (!message.trim()) return; // Prevent sending empty messages
-  
-      const newMessage = {
-        id: Date.now(), // Unique ID for message
-        channelId: selectedChannel?.id,
-        text: message,
-        userId: currentUser.id, // Assuming currentUser is stored in Redux
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      };
-  
-      // get update channels with new message value
-      const updatedChannels = channels.map((channel) => {
-        if (channel.id === selectedChannel?.id) {
-          return  { ...channel, messages: [...channel?.messages || [], newMessage] };
-        }
-          return channel;
-        }
-      );
-  
-      dispatch(updateChannels(updatedChannels)); // Dispatch updated channels array
-      setMessage(""); // Clear input field
-  };
+    const handleSend = () => {
+      // make sure that selected channel is not empty and message user wants to send is also not empty
+      if (message.trim() && selectedChannel) {
+        dispatch(sendMessage({ text: message, userId: currentUser.id, selectedChannelId: selectedChannel?.id }));
+        setMessage(""); // Clear input field
+      }
+    };
 
   return (
     <main className={`flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
@@ -125,7 +109,7 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
+          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSend())}
           ></textarea>
           <button className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg">Send</button>
       </div>
