@@ -19,7 +19,6 @@ export const updateReadMsgCount = (channels: Channel[], readMsgs: ReadMsgs[]) =>
   });
 };
 
-
 // Fetch channels and messages together
 export const fetchChannelsWithMessages = createAsyncThunk<Channel[], number>(
   "channels/fetchChannelsWithMessages",

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/redux/store';
 import ChatArea from '../app/components/ChatArea';
 import Sidebar from '../app/components/Sidebar';
-import { setCurrentChannel } from './redux/reducers/channelSlice';
+import { setSelectedChannel } from './redux/reducers/channelSlice';
 import { useEffect } from 'react';
 import SidebarSkeleton from './components/SidebarSkeleton';
 import ChatAreaSkeleton from './components/ChatAreaSkeleton';
@@ -40,7 +40,7 @@ const ChatApp = () => {
     useEffect(() => {
         dispatch(fetchChannelsWithMessages(currentUserId)).unwrap().then((channels) => {
             if (channels.length > 0) {
-                dispatch(setCurrentChannel(channels[0])); // Set the first channel
+                dispatch(setSelectedChannel(channels[0])); // Set the first channel
             }
         }).catch((error) => {
             console.error("Failed to fetch channels:", error);

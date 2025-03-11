@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar, toggleSettingsMenu } from '../redux/reducers/sidebarSlice';
 import Image from 'next/image';
-import { markChannelAsRead, setCurrentChannel } from '../redux/reducers/channelSlice';
+import { markChannelAsRead, setSelectedChannel } from '../redux/reducers/channelSlice';
 import { setCurrentUser } from '../redux/reducers/userSlice';
 
 type AllUsersData = {
@@ -97,7 +97,7 @@ export default function Sidebar({ allUsers }: { allUsers: AllUsersData[] }) {
                 {channels.map((channel) => (
                     // only favorite channels will be shown here
                     (channel.isFavorite) ?
-                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
+                    <li onClick={() => {dispatch(setSelectedChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
                     className={`${darkMode ?
                      ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
                       : ((channel.id === currentChannel?.id) ? "bg-gray-300 text-gray-900" : "bg-gray-200 text-gray-900")}
@@ -117,7 +117,7 @@ export default function Sidebar({ allUsers }: { allUsers: AllUsersData[] }) {
             <ul className="mt-2">
                 {channels.map((channel) => (
                     (!channel.isFavorite) ?
-                    <li onClick={() => {dispatch(setCurrentChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
+                    <li onClick={() => {dispatch(setSelectedChannel(channel)); dispatch(markChannelAsRead(channel.id, currentUser.id));}} key={channel.id} 
                     className={`${darkMode ?
                      ((channel.id === currentChannel?.id) ? "bg-gray-600 text-white" : "bg-gray-800 text-white")
                       : ((channel.id === currentChannel?.id) ? "bg-gray-300 text-gray-900" : "bg-gray-200 text-gray-900")}

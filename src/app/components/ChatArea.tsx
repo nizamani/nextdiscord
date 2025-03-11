@@ -4,6 +4,8 @@ import { AppDispatch, RootState } from '../redux/store';
 import { toggleSidebar } from '../redux/reducers/sidebarSlice';
 import { toggleDarkMode, setFontSize } from '../redux/reducers/themeSlice';
 import Image from 'next/image';
+import { updateChannels } from '../redux/reducers/channelSlice';
+import { useState } from 'react';
 
 type AllUsersData = {
   id: number,
@@ -20,7 +22,7 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
 
   // current channel will be "General" because that is set as initial current channel value. When user clicks on
   // a channel from sidebar, this will update to that channel
-  const currentChannel = useSelector((state: RootState) => state.channel.currentChannel);
+  const selectedChannel = useSelector((state: RootState) => state.channel.currentChannel);
 
   // id of currently logged in user
   const currentUserId = useSelector((state: RootState) => state.user.id);
@@ -31,6 +33,40 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
     return acc;
   }, {} as Record<number, { id: number; name: string; profilePicture: string }>);
 
+    // state variable to hold messages value
+    const [message, setMessage] = useState("");
+
+    // get initial value of channels, this will return an empty array
+    const { channels } = useSelector((state: RootState) => state.channel);
+    const currentUser = useSelector((state: RootState) => state.user);
+
+    // Derive currentChannel based on selectedChannelId
+    const currentChannel = channels.find((channel) => channel.id === selectedChannel?.id);
+  
+    // handle when user sends a message
+    const handleSendMessage = () => {
+      if (!message.trim()) return; // Prevent sending empty messages
+  
+      const newMessage = {
+        id: Date.now(), // Unique ID for message
+        channelId: selectedChannel?.id,
+        text: message,
+        userId: currentUser.id, // Assuming currentUser is stored in Redux
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      };
+  
+      // get update channels with new message value
+      const updatedChannels = channels.map((channel) => {
+        if (channel.id === selectedChannel?.id) {
+          return  { ...channel, messages: [...channel?.messages || [], newMessage] };
+        }
+          return channel;
+        }
+      );
+  
+      dispatch(updateChannels(updatedChannels)); // Dispatch updated channels array
+      setMessage(""); // Clear input field
+  };
 
   return (
     <main className={`flex-1 p-6 flex flex-col gap-4 overflow-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
@@ -83,7 +119,14 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
 
       {/* Chat Input */}
       <div className={`${darkMode ? "bg-gray-800" : "bg-gray-200"} p-4 flex items-center fixed bottom-4 left-4 md:left-64 right-4 text-black`}>
-          <textarea className="bg-white flex-1 p-2 rounded border border-gray-400" rows={2} placeholder="Type your message..."></textarea>
+          <textarea
+          className="bg-white flex-1 p-2 rounded border border-gray-400"
+          rows={2}
+          placeholder="Type your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
+          ></textarea>
           <button className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg">Send</button>
       </div>
     </main>

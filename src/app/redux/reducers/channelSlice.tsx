@@ -15,8 +15,11 @@ const themeSlice = createSlice({
     name: 'channel',
     initialState,
     reducers: {
-        setCurrentChannel: (state, action) => {
+        setSelectedChannel: (state, action) => {
           state.currentChannel = action.payload;
+        },
+        updateChannels: (state, action) => {
+          state.channels = action.payload;
         },
         setUnreadMessages: (state, action) => {
           state.unreadMessages = action.payload;
@@ -52,5 +55,5 @@ export const markChannelAsRead = (channelId: string, userId: number) =>
     dispatch(updateReadMessage({ channelId, userId }));
 };
 
-export const { setCurrentChannel, setUnreadMessages, setUnreadCountToZero } = themeSlice.actions;
+export const { setSelectedChannel, updateChannels, setUnreadMessages, setUnreadCountToZero } = themeSlice.actions;
 export default themeSlice.reducer;
