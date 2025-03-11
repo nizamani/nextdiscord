@@ -1,5 +1,5 @@
 import { db } from "@/app/firebase/firebase";
-import { Message } from "@/app/types";
+// import { Message } from "@/app/types";
 import { addDoc, collection, getDocs, limit, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -42,6 +42,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         await updatereadmsgid(channelId, userId, mostRecentMessageId);
+        // API call is save message
+      } else if (action === 'savemessage') {
+        const { userId, channelId, messageId, text, time } = req.query;
+
+        // make sure that userId passed is and userId is of type string when making this API call
+        if (!channelId || typeof channelId !== 'string' || !userId || typeof userId !== 'string'
+          || !messageId || typeof messageId !== 'string' || !time || typeof time !== 'string'
+           || !text || typeof text !== 'string'
+        ) {
+          return res.status(400).json({ error: "Required data is missing" });
+        }
+
+        // save msg API call needs to be moved inside here instead of directly calling function from thunk
+        await saveMessage(messageId, channelId, text, userId, time);
+
+        // return success
+        res.status(200).json({success: true});
+        // API call is unknown, then don't process it
       } else {
         res.status(500).json({ message: "Invalid request" });
       }
@@ -123,6 +141,23 @@ async function updatereadmsgid(channelId: string, userId: string, mostRecentMess
 
 /** Save a new message to Firestore
  */
-export const saveMessageToFirebase = async (message: Message): Promise<void> => {
-  await addDoc(collection(db, "messages"), message);
+async function saveMessage(messageId: string, channelId: string, text: string, userIdInput:string, time: string) {
+  const id = parseInt(messageId, 10);
+  const userId = parseInt(userIdInput, 10);
+
+  try {
+    // Store message in Firebase Firestore
+    await addDoc(collection(db, "messages"), {
+      channelId,
+      id,
+      text,
+      time,
+      userId,
+    });
+
+    console.log("Message successfully stored:", id);
+  } catch (error) {
+    console.error("Error storing message: ", error);
+    throw error;
+  }
 };

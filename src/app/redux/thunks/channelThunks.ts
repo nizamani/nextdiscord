@@ -3,7 +3,6 @@ import { AppDispatch } from "../store";
 import { Channel, Message, ReadMsgs } from '../../types';
 import { setUnreadCountToZero } from '../reducers/channelSlice';
 import { updateChannels } from '../reducers/channelSlice';
-import { saveMessageToFirebase } from '@/pages/api/messages';
 
 interface SendMessagePayload {
   text: string;
@@ -124,8 +123,12 @@ export const sendMessage = createAsyncThunk(
     // update redux store with updated channel data so that our component re-renders
     dispatch(updateChannels(updatedChannels));
 
-    // Save to Firebase
-    await saveMessageToFirebase(newMessage);
+    // API call to save message to firebase
+    await fetch(
+      `/api/messages?action=savemessage&userId=${newMessage.userId}`+
+      `&messageId=${newMessage.id}&channelId=${newMessage.channelId}&text=${newMessage.text}`+
+      `&time=${newMessage.time}`
+    );
   }
 );
 
