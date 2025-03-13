@@ -70,25 +70,28 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
   return (
     <main className={`flex-1 p-6 flex flex-col gap-4 overflow-y-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
       
-      {/* Burger Menu Button */}
-      <button onClick={() => dispatch(toggleSidebar())}
-        className={`${darkMode ? "bg-gray-900" : "bg-gray-70"}
-        w-12 md:hidden p-2 text-white rounded-lg`}>
-        ☰
-      </button>
+      {/* Fixed Top Buttons - Only Inside Main */}
+      <div className={`fixed top-4 left-4 md:left-68 right-4 flex items-center justify-center p-4 z-50 
+          ${darkMode ? "bg-gray-800" : "bg-gray-200"} shadow-b-md rounded-t-lg`}>
+        <div className="flex gap-4">
+          {/* Burger Menu Button */}
+          <button onClick={() => dispatch(toggleSidebar())}
+            className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} w-12 md:hidden p-2 text-white rounded-lg`}>
+            ☰
+          </button>
 
-      {/* Theme Toggle & Font Size */}
-      <div className="flex justify-center items-center gap-4 mb-4">
+          {/* Theme Toggle & Font Size */}
           <button onClick={() => dispatch(toggleDarkMode())}
-          className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
+            className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
             Toggle Dark Mode
           </button>
           <select onChange={(e) => dispatch(setFontSize(e.target.value))} value={fontSize}
-          className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
-              <option value="text-sm">Small</option>
-              <option value="text-base">Medium</option>
-              <option value="text-lg">Large</option>
+            className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} text-white px-4 py-2 rounded-lg`}>
+            <option value="text-sm">Small</option>
+            <option value="text-base">Medium</option>
+            <option value="text-lg">Large</option>
           </select>
+        </div>
       </div>
 
       {/* Chat Messages */}
