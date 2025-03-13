@@ -68,7 +68,7 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
     }, [currentChannel]);
 
   return (
-    <main className={`flex-1 p-6 flex flex-col gap-4 overflow-y-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
+    <main className={`flex-1 p-6 pt-22 flex flex-col gap-4 overflow-y-auto rounded-lg shadow ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
       
       {/* Fixed Top Buttons - Only Inside Main */}
       <div className={`fixed top-4 left-4 md:left-68 right-4 flex items-center justify-center p-4 z-50 
