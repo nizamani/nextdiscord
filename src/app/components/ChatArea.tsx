@@ -27,6 +27,9 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
   // id of currently logged in user
   const currentUserId = useSelector((state: RootState) => state.user.id);
 
+  // based on this we will either show burger menu or close button when side bar is open or closed
+  const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
+
   // Create a user lookup object outside the JSX loop
   const userMap: Record<number, { id: number; name: string; profilePicture: string }> = allUsers.reduce((acc, user) => {
     acc[user.id] = user;
@@ -77,7 +80,7 @@ const ChatArea = ({ allUsers }: { allUsers: AllUsersData[] }) => {
           {/* Burger Menu Button */}
           <button onClick={() => dispatch(toggleSidebar())}
             className={`${darkMode ? "bg-gray-900" : "bg-gray-700"} w-12 md:hidden p-2 text-white rounded-lg`}>
-            ☰
+            {isSidebarOpen ? '✕' : '☰'}
           </button>
 
           {/* Theme Toggle & Font Size */}

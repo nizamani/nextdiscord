@@ -1,7 +1,7 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { toggleSidebar, toggleSettingsMenu } from '../redux/reducers/sidebarSlice';
+import { toggleSettingsMenu } from '../redux/reducers/sidebarSlice';
 import Image from 'next/image';
 import { markChannelAsRead, setSelectedChannel } from '../redux/reducers/channelSlice';
 import { setCurrentUser } from '../redux/reducers/userSlice';
@@ -45,13 +45,9 @@ export default function Sidebar({ allUsers }: { allUsers: AllUsersData[] }) {
     };
 
   return (
-    <aside className={`pb-20 md:pb-0 h-full fixed md:relative w-1/2 md:w-64 p-5 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}
+    <aside className={` p-5 pb-32 pt-20 md:pb-0 md:pt-5 h-full fixed md:relative w-1/2 md:w-64 flex flex-col gap-4 overflow-y-auto rounded-lg transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} ${darkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}
      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} 
      ${darkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}`}>
-        <button onClick={() => dispatch(toggleSidebar())}
-        className={`md:hidden absolute top-4 right-4 text-xl p-2 rounded-full text-white
-             ${darkMode ? "bg-gray-900" : "bg-gray-700 hover:bg-gray-600"}`}>✕</button>
-        
         {/* Settings */}
         <h2 className="text-lg font-bold">Settings</h2>
         <div className="relative flex items-center mt-2 cursor-pointer" onClick={() => dispatch(toggleSettingsMenu())}>
